@@ -1,0 +1,24 @@
+from scratch:
+
+% helm repo add nvidia https://helm.ngc.nvidia.com/nvidia
+% helm install network-operator nvidia/network-operator -n network-operator --create-namespace --version v24.4.0 --wait
+% helm show values nvidia/network-operator --version v24.4.0 > values.yaml
+
+edit values.yaml:
+- set rdmaSharedDevicePlugin.devices to all ib devices
+- deployCR: true
+- secondaryNework.deploy: false
+- bump operator memory requests/limits to 1Gi
+
+% helm upgrade network-operator -n network-operator nvidia/network-operator -f values.yaml
+% kubectl get nicclusterpolicies.mellanox.com nic-cluster-policy -o yaml > nic-cluster-policy.yaml
+
+fix deployCR in values.yaml:
+- deployCR: false
+
+% helm upgrade network-operator -n network-operator nvidia/network-operator -f values.yaml
+
+update nic-cluster-policy.yaml:
+- set ifNames to all ib devices
+
+% kubectl apply -f nic-cluster-policy.yaml

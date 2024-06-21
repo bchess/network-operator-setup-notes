@@ -1,0 +1,12 @@
+secondaryNetwork:
+  deploy: false
+rdmaSharedDevicePlugin:
+  deploy: true
+operator:
+  resources:
+    limits:
+      cpu: 500m
+      memory: 1Gi
+    requests:
+      cpu: 5m
+      memory: 1Gi
